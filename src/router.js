@@ -4,8 +4,73 @@ import { getBooksHandler, getBookByIdHandler } from "./controllers/books.js";
 
 const router = express.Router();
 
-router.get( "/books", getBooksHandler);
+/**
+ * @openapi
+ * /books:
+ *   get:
+ *     tags:
+ *       - Books
+ *     summary: Get all books
+ *     description: Returns a list of all books.
+ *     responses:
+ *       200:
+ *         description: A list of books.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Book'
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.get("/books", getBooksHandler);
+
+/**
+ * @openapi
+ * /books/{id}:
+ *   get:
+ *     tags:
+ *       - Books
+ *     summary: Get a book by ID
+ *     description: Returns a single book that matches the given ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The unique ID of the book.
+ *         schema:
+ *           type: string
+ *           example: "1"
+ *     responses:
+ *       200:
+ *         description: The requested book.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Book'
+ *       400:
+ *         description: Invalid book ID.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Book not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.get('/books/:id', getBookByIdHandler);
 export default router;
-
-
