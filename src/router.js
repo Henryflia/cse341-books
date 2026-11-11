@@ -6,6 +6,34 @@ const router = express.Router();
 
 /**
  * @openapi
+ * components:
+ *   schemas:
+ *     Book:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "b1"
+ *         author:
+ *           type: string
+ *           example: "Maya Rivera"
+ *         title:
+ *           type: string
+ *           example: "Patterns of Light"
+ *         publicationDate:
+ *           type: string
+ *           format: date
+ *           example: "2021-08-17"
+ *     Error:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           example: "Book not found"
+ */
+
+/**
+ * @openapi
  * /books:
  *   get:
  *     tags:
@@ -21,12 +49,6 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Book'
- *       500:
- *         description: Internal server error.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
  */
 router.get("/books", getBooksHandler);
 
@@ -45,7 +67,7 @@ router.get("/books", getBooksHandler);
  *         description: The unique ID of the book.
  *         schema:
  *           type: string
- *           example: "1"
+ *           example: "b1"
  *     responses:
  *       200:
  *         description: The requested book.
@@ -53,20 +75,8 @@ router.get("/books", getBooksHandler);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Book'
- *       400:
- *         description: Invalid book ID.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
  *       404:
  *         description: Book not found.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       500:
- *         description: Internal server error.
  *         content:
  *           application/json:
  *             schema:
