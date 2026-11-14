@@ -162,7 +162,7 @@ Success:
 Errors:
 - `400` if a required field is missing
 - `400` if `birthYear` is not a valid number
-- `400` if the `id` already exists
+- `409` { "message": "Author id already exists" }.
 - `500` if an unexpected server or database error occurs
 
 #### PUT /authors/:id
@@ -193,7 +193,7 @@ Success:
 - Response body: none
 
 Errors:
-- `400` if one or more books still reference this author's `id`. The author is not deleted, and the response body is `{ "message": "Cannot delete an author who still has books" }`.
+- `409` if one or more books still reference this author's `id`. The author is not deleted, and the response body is `{ "message": "Cannot delete an author who still has books" }`.
 - `404` if no author exists with that id
 - `500` if an unexpected server or database error occurs
 
