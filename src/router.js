@@ -1,5 +1,11 @@
 import express from "express";
-import { getBooksHandler, getBookByIdHandler } from "./controllers/books.js";
+import {
+    getAllBooks,
+    getBookById,
+    createBook,
+    updateBook,
+    deleteBook
+} from "./controllers/books.js";
 import {
     getAllAuthors,
     getAuthorById,
@@ -59,8 +65,10 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Book'
+ *       500:
+ *         description: Unable to retrieve books
  */
-router.get("/books", getBooksHandler);
+router.get("/books", getAllBooks);
 
 /**
  * @openapi
@@ -91,8 +99,10 @@ router.get("/books", getBooksHandler);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Unable to retrieve the book
  */
-router.get('/books/:id', getBookByIdHandler);
+router.get('/books/:id', getBookById);
 
 /**
  * @openapi
@@ -108,6 +118,116 @@ router.get('/books/:id', getBookByIdHandler);
  *         description: Unable to retrieve authors
  */
 router.get('/authors', getAllAuthors);
+
+/**
+ * @openapi
+ * /books:
+ *   post:
+ *     summary: Create a book
+ *     tags:
+ *       - Books
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *               - authorId
+ *               - title
+ *               - publicationDate
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: Custom book id. It must be unique.
+ *               authorId:
+ *                 type: string
+ *                 description: The id of an existing author.
+ *               title:
+ *                 type: string
+ *               publicationDate:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created book
+ *       400:
+ *         description: A field is missing or invalid, or the authorId does not match an existing author
+ *       409:
+ *         description: The book id already exists
+ *       500:
+ *         description: Unable to create the book
+ */
+router.post("/books", createBook);
+
+/**
+ * @openapi
+ * /books/{id}:
+ *   put:
+ *     summary: Update a book
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "b1"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - authorId
+ *               - title
+ *               - publicationDate
+ *             properties:
+ *               authorId:
+ *                 type: string
+ *                 description: The id of an existing author.
+ *               title:
+ *                 type: string
+ *               publicationDate:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated book
+ *       400:
+ *         description: A field is missing or invalid, or the authorId does not match an existing author
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Unable to update the book
+ */
+router.put("/books/:id", updateBook);
+
+/**
+ * @openapi
+ * /books/{id}:
+ *   delete:
+ *     summary: Delete a book
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The unique ID of the book.
+ *         schema:
+ *           type: string
+ *           example: "b1"
+ *     responses:
+ *       204:
+ *         description: The book was deleted. No response body.
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Unable to delete the book
+ */
+router.delete("/books/:id", deleteBook);
 
 /**
  * @openapi
